@@ -4,7 +4,7 @@ const port = 5001;
 
 var crypto = require('crypto');
 
-app.get('/get-stream-url', (req, res) => {
+app.get('/issue-stream-url', (req, res) => {
   const ip = req.ip.match(/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/gm);
 
   res.json(getStreamUrl('127.0.0.1', ''));
