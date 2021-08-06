@@ -7,7 +7,7 @@ var crypto = require('crypto');
 app.get('/get-stream-url', (req, res) => {
   const ip = req.ip.match(/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/gm);
 
-  res.send(getStreamUrl('127.0.0.1', '!BkAxX:8TS&?cV'));
+  res.json(getStreamUrl('127.0.0.1', ''));
 });
 
 function generateSecurePathHash(expires, client_ip, secret) {
@@ -26,7 +26,7 @@ function getStreamUrl(ip, secret) {
 
   const token = generateSecurePathHash(expires, ip, secret);
 
-  return `https://example.com/video/hls/${token}/${expires}/live.m3u8`;
+  return `https://larin.cam:8443/video/hls/${token}/${expires}/live.m3u8`;
 }
 
 app.listen(port, () => {
