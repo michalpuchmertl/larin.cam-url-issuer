@@ -7,7 +7,7 @@ var crypto = require('crypto');
 app.get('/get-stream-url', (req, res) => {
   const ip = req.ip.match(/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/gm);
 
-  res.send(getStreamUrl(ip[0], 'uigfp(@#tfpIUDGPFiouGDF'));
+  res.send(getStreamUrl('127.0.0.1', '!BkAxX:8TS&?cV'));
 });
 
 function generateSecurePathHash(expires, client_ip, secret) {
@@ -26,10 +26,8 @@ function getStreamUrl(ip, secret) {
 
   const token = generateSecurePathHash(expires, ip, secret);
 
-  return `https://example.com/video/hls/${token}/${expires}/play.m3u8`;
+  return `https://example.com/video/hls/${token}/${expires}/live.m3u8`;
 }
-
-getStreamUrl('127.0.0.1', 'uigfp(@#tfpIUDGPFiouGDF');
 
 app.listen(port, () => {
   console.log(`Success! Stream link issuer is listening on port ${port}!`);
