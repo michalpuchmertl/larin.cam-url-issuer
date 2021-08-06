@@ -2,12 +2,41 @@ const express = require('express');
 const app = express();
 const port = 5001;
 
-var crypto = require('crypto');
+const crypto = require('crypto');
+const admin = require('firebase-admin');
+const serviceAccount = require("./larincam-firebase-adminsdk.json");
+
+admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+})
+
 
 app.get('/issue-stream-url', (req, res) => {
-  const ip = req.ip.match(/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/gm);
-
-  res.json(getStreamUrl('127.0.0.1', ''));
+  const authHeader = req.headers['authorization'];
+  if (authHeader) {
+    const bearer = authHeader.split(' ');
+    const bearerToken = bearer[1];
+    admin
+      .auth()
+      .verifyIdToken(bearerToken)
+      .then((decodedToken) => {
+        const ip = req.ip.match(
+          /[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/gm
+        );
+        res.set('Access-Control-Allow-Origin', ['*']);
+        res.status(200).json({
+          status: true,
+          data: getStreamUrl('127.0.0.1', 'N^YWp&gaqu|?fyA'),
+        });
+      })
+      .catch((error) => {
+        res
+          .status(400)
+          .json({ status: false, error: 'Could not verify auth token.' });
+      });
+  } else {
+    res.status(400).json({ status: false, error: 'Missing auth token.' });
+  }
 });
 
 function generateSecurePathHash(expires, client_ip, secret) {
